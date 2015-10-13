@@ -14,17 +14,16 @@
                        DockPanel.Dock="Top"
                        Height="20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Padding="8" VerticalAlignment="Center" Text="IRC" />
-                <Button Grid.Column="2" Content="X" Click="Close"/>
+                <Button Grid.Column="2" Content="X" Click="Close" Background="Black" Foreground="DarkGray" />
             </Grid>
             <ScrollViewer DockPanel.Dock="Left" Width="100" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                <ListBox Name="channels" SelectionChanged="SelectChannel" />
+                <ListBox Name="channels" SelectionChanged="SelectChannel" BorderBrush="Black" Background="Black" Foreground="DarkGray" />
             </ScrollViewer>
-            <TextBox DockPanel.Dock="Bottom" Height="20" Name="input" KeyDown="KeyDown"/>
+            <TextBox DockPanel.Dock="Bottom" Height="20" Name="input" KeyDown="InputKeyDown" Background="Black" BorderBrush="DarkGray" Foreground="DarkGray" />
             <ScrollViewer Grid.Row="1" Margin="5" Name="scrollView" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                 <ItemsControl Name="log">
                     <ItemsControl.ItemTemplate>

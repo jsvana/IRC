@@ -4,7 +4,6 @@
          
     <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes\ExpressionDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary></Application.Resources>
 </Application>

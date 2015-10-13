@@ -18,7 +18,7 @@ namespace IRC
         private string SERVER = "irc.freenode.net";
         private string USERNAME = "jsvana-test";
         private string[] CHANNELS = new string[] {
-            "#encoded",
+            //"#encoded",
             "#encoded-test",
         };
 
@@ -43,7 +43,7 @@ namespace IRC
 
             titleBar.MouseLeftButtonDown += (o, e) => DragMove();
 
-            AddMessage("Connecting...", "Server", "Server");
+            AddServerMessage("Connecting...");
             log.ItemsSource = messages[currentChannel];
             client = new IrcClient(SERVER, new IrcUser(USERNAME, USERNAME));
             channels.ItemsSource = channelNames;
@@ -106,12 +106,12 @@ namespace IRC
 
         private void NoticeReceived(object sender, ChatSharp.Events.IrcNoticeEventArgs e)
         {
-            AddMessage(e.Notice, "Server", "Server");
+            AddServerMessage(e.Notice);
         }
 
         private void MotdPartReceived(object sender, ChatSharp.Events.ServerMOTDEventArgs e)
         {
-            AddMessage(e.MOTD, "Server", "Server");
+            AddServerMessage(e.MOTD);
         }
 
         private void ConnectionComplete(object sender, System.EventArgs e)
@@ -139,19 +139,68 @@ namespace IRC
             }
         }
 
-        private void KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void AddServerMessage(string content)
+        {
+            AddMessage(content, "Server", "Server");
+        }
+
+        private void InputKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
+                string message = input.Text;
+
+                // Handle commands
+                if (message[0] == '/')
+                {
+                    // Remove the '/'
+                    HandleCommand(message.Substring(1));
+                    input.Text = "";
+                    return;
+                }
+
                 if (currentChannel == "Server")
                 {
                     // Ignore server things for now
                     Console.WriteLine("Ignoring server message");
                     return;
                 }
-                client.SendRawMessage("PRIVMSG " + currentChannel + " :" + input.Text);
-                AddMessage(input.Text, currentChannel, USERNAME);
+                client.SendMessage(message, new string[] { currentChannel });
+                AddMessage(message, currentChannel, USERNAME);
+
+                // Clear input
                 input.Text = "";
+            }
+        }
+
+        private void HandleCommand(string command)
+        {
+            string[] parts = command.Split(' ');
+            switch (parts[0])
+            {
+                case "join":
+                    if (parts.Length < 2)
+                    {
+                        AddServerMessage("Not enough parameters to JOIN command");
+                        return;
+                    }
+                    try
+                    {
+                        string channel = parts[1];
+                        if (channel[0] != '#')
+                        {
+                            channel = '#' + channel;
+                        }
+                        client.JoinChannel(channel);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Do nothing as user is already in channel
+                    }
+                    break;
+                default:
+                    AddServerMessage("Unknown command \"" + parts[0] + "\"");
+                    break;
             }
         }
 
