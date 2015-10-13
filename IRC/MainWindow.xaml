@@ -1,0 +1,48 @@
+﻿<Window x:Class="IRC.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IRC"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Title="IRC" Height="350" Width="525" Background="Black" Foreground="DarkGray" ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <DockPanel>
+            <Grid Name="titleBar"
+                       DockPanel.Dock="Top"
+                       Height="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Padding="8" VerticalAlignment="Center" Text="IRC" />
+                <Button Grid.Column="2" Content="X" Click="Close"/>
+            </Grid>
+            <ScrollViewer DockPanel.Dock="Left" Width="100" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox Name="channels" SelectionChanged="SelectChannel" />
+            </ScrollViewer>
+            <TextBox DockPanel.Dock="Bottom" Height="20" Name="input" KeyDown="KeyDown"/>
+            <ScrollViewer Grid.Row="1" Margin="5" Name="scrollView" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ItemsControl Name="log">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Time}" Opacity=".6"/>
+                                <TextBlock Grid.Column="1" Text="{Binding User}" Opacity=".6"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Content}" TextWrapping="Wrap"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Window>
